@@ -1,0 +1,203 @@
+% Anpassung des Seitenlayouts --------------------------------------------------
+%   siehe Seitenstil.tex
+% ------------------------------------------------------------------------------
+\usepackage[
+    automark, % Kapitelangaben in Kopfzeile automatisch erstellen
+    %headsepline, % Trennlinie unter Kopfzeile
+    ilines % Trennlinie linksbündig ausrichten
+]{scrpage2}
+
+\usepackage{scrhack}
+
+% Anpassung an Landessprache ---------------------------------------------------
+%\usepackage[ngerman]{babel}
+%\usepackage[babel,german=quotes]{csquotes}
+
+\usepackage[english]{babel}
+
+% Schrift ----------------------------------------------------------------------
+\usepackage{lmodern} % bessere Fonts
+\usepackage{relsize} % Schriftgröße relativ festlegen
+
+\usepackage{fontspec}
+
+% Blindtext erzeugen "\blindtext" oder "\Blindtext"
+\usepackage{blindtext}
+
+% Grafiken ---------------------------------------------------------------------
+% Einbinden von JPG-Grafiken ermöglichen
+\usepackage{graphicx}
+\usepackage{floatflt}
+
+% Change default placement options to [htbp]
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+% hier liegen die Bilder des Dokuments
+\graphicspath{{images/}}
+%\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{caption}
+\usepackage[position=b]{subcaption}
+%\usepackage{pdfpages}	% Einbinden von kompletten PDF Seiten
+\usepackage[absolute]{textpos}
+
+\usepackage{enumitem}
+
+% Befehle aus AMSTeX für mathematische Symbole z.B. \boldsymbol \mathbb --------
+\usepackage{amsmath,amsfonts}
+\usepackage{textcomp}
+
+\usepackage[tikz]{bclogo}
+
+% für Index-Ausgabe mit \printindex --------------------------------------------
+\usepackage{makeidx}
+
+% Einfache Definition der Zeilenabstände und Seitenränder etc. -----------------
+\usepackage{setspace}
+\usepackage{geometry}
+
+% Bilder -----------------------------------------------------------------------
+% Grafiken werden nur in der dazugehörigen section eingefügt, d.h  ein zu
+% spätes Einfügen in der nächsten section wird verhindert \FloatBarrier an
+% Stelle, die nicht überschritten werden soll, einfügen
+\usepackage[section]{placeins}
+
+
+% zum Einbinden von Programmcode -----------------------------------------------
+\usepackage{listings}
+\usepackage{xcolor} 
+\definecolor{hellgelb}{rgb}{1,1,0.9}
+\definecolor{colKeys}{rgb}{0,0,1}
+\definecolor{colIdentifier}{rgb}{0,0,0}
+\definecolor{colComments}{rgb}{1,0,0}
+\definecolor{colString}{rgb}{0,0.5,0}
+\lstset{
+    float=htbp,
+    basicstyle=\ttfamily\color{black},%\small
+    identifierstyle=\color{colIdentifier},
+    keywordstyle=\color{colKeys},
+    stringstyle=\color{colString},
+    commentstyle=\color{colComments},
+    keepspaces=true,
+    columns=fullflexible,
+    tabsize=4,
+    captionpos=b,
+%    frame=single,	%l,
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    escapeinside={[[*}{*]])},		% zum Setzten von Referenzen auf einzelne Zeilen, Beispiel: "(*\label{line:irq}*)" und \ref{line:irq}
+    firstnumber=auto,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    backgroundcolor=\color{white},%hellgelb
+    breakautoindent=true
+}
+
+% URL verlinken, lange URLs umbrechen etc. -------------------------------------
+\usepackage{url}
+
+% wichtig für korrekte Zitierweise ---------------------------------------------
+\usepackage[square]{natbib}
+
+% PDF-Optionen -----------------------------------------------------------------
+\usepackage[
+    bookmarksopen=true,
+    bookmarks,
+    bookmarksnumbered,
+    colorlinks=true,
+% diese Farbdefinitionen zeichnen Links im PDF farblich aus
+    %linkcolor=red, % einfache interne Verknüpfungen
+    anchorcolor=black,% Ankertext
+    citecolor=blue, % Verweise auf Literaturverzeichniseinträge im Text
+    filecolor=magenta, % Verknüpfungen, die lokale Dateien öffnen
+    menucolor=red, % Acrobat-Menüpunkte
+    urlcolor=cyan, 
+% diese Farbdefinitionen sollten für den Druck verwendet werden (alles schwarz)
+    linkcolor=black, % einfache interne Verknüpfungen
+    %anchorcolor=black, % Ankertext
+    %citecolor=black, % Verweise auf Literaturverzeichniseinträge im Text
+    %filecolor=black, % Verknüpfungen, die lokale Dateien öffnen
+    %menucolor=black, % Acrobat-Menüpunkte
+    %urlcolor=black, 
+    backref,
+    plainpages=false, % zur korrekten Erstellung der Bookmarks
+    pdfpagelabels, % zur korrekten Erstellung der Bookmarks
+    hypertexnames=false, % zur korrekten Erstellung der Bookmarks
+    linktoc=all
+]{hyperref}
+% Befehle, die Umlaute ausgeben, führen zu Fehlern, wenn sie hyperref als Optionen übergeben werden
+\hypersetup{
+    pdftitle={\documentTitle},
+    pdfauthor={\documentAuthor},
+    pdfcreator={\documentAuthor},
+    pdfsubject={\documentTitle},
+    pdfkeywords={\documentTitle},
+}
+
+% Anstelle von nomencl wird acronym weil dies einfacher ist
+% - \ac{betai} fügt die Abkürzung ein. Beim ersten Vorkommen der Abkürzung wird
+%   zunächst der ganze Begriff angegeben und das Akronym bzw. die Abkürzung in Klammern.
+% - \acs{betai} wird dann nur das Symbol bzw. die Abkürzung im Text gedruckt.
+% - \acf{betai} gibt zusätzlich noch die Erklärung aus
+% - \acl{betai} fügt lediglich die Beschreibung ein.
+%\usepackage[printonlyused]{acronym}
+
+\usepackage[nonumberlist,shortcuts,acronym]{glossaries}
+\makeglossaries
+
+% Avoid grouping abbrevations according to their starting letter
+\renewcommand*{\glsgroupskip}{}
+% Omit the dot at the end of each description
+\renewcommand*{\glspostdescription}{}
+\renewcommand{\glsnamefont}[1]{\textbf{#1}}
+
+% fortlaufendes Durchnummerieren der Fußnoten ----------------------------------
+\usepackage{chngcntr}
+
+% für lange Tabellen -----------------------------------------------------------
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{lscape}
+\usepackage{booktabs}	% schöne Tabellen
+\usepackage{tabularx}
+
+% Spaltendefinition rechtsbündig mit definierter Breite ------------------------
+\newcolumntype{w}[1]{>{\raggedleft\hspace{0pt}}p{#1}}
+
+% Show folder structures
+\usepackage{dirtree}
+
+% definiert u.a. die Befehle \todo und \listoftodos
+\usepackage{todonotes}
+
+% "\thepage\ of \pageref{LastPage}", benötigt für die Fusszeile
+\usepackage{lastpage}
+
+% sorgt dafür, dass Leerzeichen hinter parameterlosen Makros nicht als
+% Makroendezeichen interpretiert werden
+\usepackage{xspace}
+
+% SI-Einheiten darstellen
+\usepackage[binary-units]{siunitx}
+\sisetup{
+	locale=DE,
+%	per=frac,
+%	alsoload=binary,
+%	repeatunits=false,
+%	trapambigrange=false,
+%	tophrase ={{ bis }},
+%	decimalsymbol=comma,
+}
+
+% Use ISO date format for all dates
+\usepackage{datetime}
+%\yyyymmdddate
+\renewcommand{\dateseparator}{-}
+
+% for the title page
+\usepackage{wallpaper}
+

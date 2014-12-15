@@ -1,0 +1,37 @@
+% Eigene Befehle und typographische Auszeichnungen für diese
+
+\newcommand{\listing}[1]{Listing~\ref{lst:#1}}
+
+\newcommand{\bs}{$\backslash$}
+
+% erzeugt ein Listenelement mit fetter Überschrift 
+\newcommand{\itemd}[2]{\item{\textbf{#1}}\\{#2}}
+
+% Usage:
+% Foo bar & \specialcell{Foo\\bar}    & Foo bar \\ % vertically centered
+% Foo bar & \specialcell[t]{Foo\\bar} & Foo bar \\ % aligned with top rule
+% Foo bar & \specialcell[b]{Foo\\bar} & Foo bar \\ % aligned with bottom rule
+\newcommand{\specialcell}[2][c]{\begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+
+\newcommand{\theadcenter}[2]{\multicolumn{1}{#1}{\bfseries #2}}
+\newcommand{\thead}[1]{\bfseries #1}
+
+% see also http://jevopi.blogspot.de/2010/04/latex-lstinline-and-hyphenations.html
+\newcommand{\codeJava}[1]{\lstinline[language=Java,breaklines=true,mathescape,literate={\-}{}{0\discretionary{-}{}{}}]§#1§}
+\newcommand{\codeCpp}[1]{\lstinline[language=C++,breaklines=true,mathescape,literate={\-}{}{0\discretionary{-}{}{}}]§#1§}
+
+\newcommand{\code}[1]{\lstinline$#1$}
+\newcommand{\file}[1]{\texttt{#1}}
+
+\newcommand{\TBD}{\textcolor{red}{TBD}\xspace}
+\newcommand{\TBC}{\textcolor{red}{TBC}\xspace}
+%\newcommand{\TBD}{{\hypersetup{linkcolor=red}\acs{tbd}}}
+%\newcommand{\TBC}{{\hypersetup{linkcolor=red}\acs{tbd}}}
+
+\newcommand{\applicableDocument}[1]{[\hyperlink{AD#1}{AD#1}]}
+\newcommand{\referenceDocument}[1]{[\hyperlink{RD#1}{RD#1}]}
+
+\newcommand{\imageAttention}{\includegraphics[width=14pt]{attention}}	% TODO
+\newenvironment{important}[1]
+	{\begin{bclogo}[logo=\imageAttention,noborder=true, couleur=gray!10, couleurBarre=gray!10]{#1\vspace{.3cm}}}
+	{\end{bclogo}}

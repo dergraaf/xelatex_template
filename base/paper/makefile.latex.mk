@@ -22,17 +22,27 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-BUILDFOLDER ?= '.'
-BUILDPATH    = $(ROOTFOLDER)/build/latex/$(BUILDFOLDER)
+BUILDFOLDER ?= .
+BUILDPATH   ?= $(ROOTPATH)/../build/$(BUILDFOLDER)
 
-# Additional input folders for pdflatex. The trailing semicolon at the end
-# is nessesary to add the default search path!
-TEXINPUTS = $(CONFIGURATION_FOLDER):$(CONFIGURATION_FOLDER)/packages:$(CONFIGURATION_FOLDER)/images:$(BUILDPATH)/images:$(BUILDPATH)/rst:
+COMMONPATH   = $(ROOTPATH)/common
+DOCUMENTPATH = $(ROOTPATH)/paper
 
 LATEX ?= xelatex
 
-RST_SRC = $(wildcard content/*.rst)
-RST_OUT = $(RST_SRC:content/%.rst=$(BUILDPATH)/rst/content/%.tex)
+MAINFILE    = main
+
+# Additional input folders for pdflatex. The trailing semicolon at the end
+# is nessesary to add the default search path!
+TEXINPUTS = $(COMMONPATH):$(COMMONPATH)/packages:$(COMMONPATH)/images:$(DOCUMENTPATH):$(DOCUMENTPATH)/images:$(BUILDPATH):$(BUILDPATH)/images:$(BUILDPATH)/rst:$(BUILDPATH)/md:
+
+RST_SRC  = $(wildcard content/*.rst)
+RST_SRC += $(wildcard content/*/*.rst)
+RST_OUT  = $(RST_SRC:content/%.rst=$(BUILDPATH)/rst/content/%.tex)
+
+MD_SRC  = $(wildcard content/*.md)
+MD_SRC += $(wildcard content/*/*.md)
+MD_OUT  = $(MD_SRC:content/%.md=$(BUILDPATH)/md/content/%.tex)
 
 all: images index tex
 
@@ -42,14 +52,30 @@ configure:
 	@-mkdir -p $(BUILDPATH)/images
 	@-mkdir -p $(BUILDPATH)/content
 	@-mkdir -p $(BUILDPATH)/rst/content
+	@-mkdir -p $(BUILDPATH)/md/content
+
+md: $(MD_OUT)
+$(BUILDPATH)/md/content/%.tex: content/%.md
+	pandoc --from=markdown --to=rst --output="$@.rst" "$<"
+	$(COMMONPATH)/rst/document_generator "$@.rst" \
+		--table-style="booktabs" \
+		--tab-width=4 \
+		--template="$(COMMONPATH)/rst/template.tex" \
+		"$@"
 
 rst: $(RST_OUT)
 $(BUILDPATH)/rst/content/%.tex: content/%.rst
-	$(CONFIGURATION_FOLDER)/../document_rst/document_generator "$<" \
+	$(COMMONPATH)/rst/document_generator "$<" \
 		--table-style="booktabs" \
 		--tab-width=4 \
-		--template="$(CONFIGURATION_FOLDER)/template_rst.tex" \
+		--template="$(COMMONPATH)/rst/template.tex" \
 		"$@"
+
+pandoc --from=markdown --to=rst --output=README.rst README.md
+
+preprocess: configure
+#	python $(DOCUMENTPATH)/preprocess.py meta.tex $(DOCUMENTPATH)/document_approval.tex.in $(BUILDPATH)/document_approval.tex
+	
 
 ifeq ($(OS),Windows_NT)
 # Windows
@@ -59,12 +85,16 @@ LATEX_PREFIX=
 LATEX_POSTFIX=$(PARAMETER)
 else
 # Linux
-LATEX_PREFIX=@TEXINPUTS=$(TEXINPUTS)
+LATEX_PREFIX=TEXINPUTS="$(TEXINPUTS)"
 LATEX_POSTFIX=
 endif
 
-tex: configure rst
-	$(LATEX_PREFIX) $(LATEX) $(LATEX_POSTFIX) -output-directory="$(BUILDPATH)" $(MAINFILE).tex
+tex: configure md rst preprocess
+	@$(LATEX_PREFIX) $(LATEX) $(LATEX_POSTFIX) -output-directory="$(BUILDPATH)" $(MAINFILE).tex
+	# Repeat until LaTex has updated all dependencies
+	@while (grep -e 'Rerun to get ' -e 'Rerun LaTeX.' $(BUILDPATH)/$(MAINFILE).log) ; do \
+		( $(LATEX_PREFIX) $(LATEX) $(LATEX_POSTFIX) -output-directory="$(BUILDPATH)" $(MAINFILE).tex ) ; \
+	done
 	@cp $(BUILDPATH)/$(MAINFILE).pdf $(RESULT)
 
 bibtex:
@@ -78,18 +108,16 @@ index: configure
 view:
 	xdg-open $(RESULT) &
 
-# Check spelling with `aspell`.
- 
-# ~/.aspell.en.pws
 spell:
-	$(CONFIGURATION_FOLDER)/spellcheck.sh aspell.dict content/*.tex
+	$(COMMONPATH)/spellcheck.sh aspell.dict content/*.tex
 
-include $(CONFIGURATION_FOLDER)/makefile.images.mk
+include $(COMMONPATH)/makefile.images.mk
 
 clean:
-	@$(RM) *.aux
-	@$(RM) content/*.aux
 	@$(RM) -r $(BUILDPATH)
 
-.PHONY: index clean tex bibtex spell view images
+distclean: clean
+	@$(RM) $(RESULT)
+
+.PHONY: index preprocess clean tex bibtex spell view images
 

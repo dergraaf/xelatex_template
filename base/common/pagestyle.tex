@@ -2,24 +2,24 @@
 \setmainfont[BoldFont={Aller},ItalicFont={Aller Italic}]{Aller Light}
 
 \setromanfont[BoldFont={Aller},ItalicFont={Aller Italic}]{Aller Light}
-%\setsansfont[BoldFont={Aller},ItalicFont={Aller Italic}]{Aller}
 \setsansfont[BoldFont={Aller},ItalicFont={Aller Italic}]{Aller Light}
 \setmonofont[BoldFont={Aller},ItalicFont={Aller Italic}]{Aller Light}
 
-% Zeilenabstand 1,5 Zeilen -----------------------------------------------------
 \onehalfspacing
 
 % Seitenränder -----------------------------------------------------------------
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
-\geometry{paper=a4paper,left=25mm,right=25mm,top=25mm,bottom=50mm}
+\geometry{paper=a4paper,left=25mm,right=25mm,top=20mm,bottom=40mm,includefoot}
 
 % Kopf- und Fußzeilen ----------------------------------------------------------
 \pagestyle{scrheadings}
+
 % Kopf- und Fußzeile auch auf Kapitelanfangsseiten
 \renewcommand*{\chapterpagestyle}{scrheadings} 
+\clearscrheadfoot
+
 % Schriftform der Kopfzeile
 \renewcommand{\headfont}{\normalfont}
-\clearscrheadfoot
 
 % sonstige typographische Einstellungen ----------------------------------------
 
@@ -37,3 +37,6 @@
 
 % Fußnoten fortlaufend durchnummerieren
 \counterwithout{footnote}{chapter}
+
+\definecolor{DLR_grau}{RGB}{70,70,70}
+

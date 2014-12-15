@@ -1,0 +1,127 @@
+
+\documentclass[
+    11pt,
+    DIV10,
+	% Default language
+    english,
+    a4paper,
+    oneside,
+    titlepage,
+	% Distance between paragraphs (half a line)
+    parskip=half,
+	% Smaller heading
+    headings=normal,
+    captions=tableheading,
+	numbers=noenddot,
+    final % Status des Dokuments (final/draft)
+]{scrreprt}
+
+% Conditional compiling of source files, defined here because it
+% is used in 'meta.tex' to define the structure of the document
+\usepackage{etoolbox}
+
+\newtoggle{optionGlossary}
+\newtoggle{optionListOfFiguresAndTables}
+
+% Include options set by the user to configure the generation of the
+% document. This includes information like the document name, authors, etc. but
+% also the structure, e.g. whether to include a changelog.
+\input{meta}
+
+% Include required packages
+\input{packages}
+
+\input{docutils}
+
+\makeindex
+%\makenomenclature
+
+\input{pagestyle}
+
+% Hyphenation
+\include{base_hyphenation}
+\IfFileExists{hyphenation.tex}{\include{hyphenation}}{}
+
+% LaTeX-commands
+\include{base_commands}
+\IfFileExists{commands.tex}{\include{commands}}{}
+
+\begin{document}
+
+% Number also subsubsections
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% -----------------------------------------------------------------------------
+% Titlepage without any page numbering
+\include{titlepage}
+
+% Enable header and footer with page numbering
+\include{heading}
+
+% Before the main part the numbering will be in roman numerals
+\pagenumbering{Roman}
+
+% -----------------------------------------------------------------------------
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Preamble}
+
+\IfFileExists{content/abstract.tex}{
+	\chapter*{Abstract}
+	\label{cha:abstract}
+	\addcontentsline{toc}{section}{Abstract}
+	\input{content/abstract}
+}{}
+
+\phantomsection
+\addcontentsline{toc}{section}{Table of Content}
+\tableofcontents
+
+\IfFileExists{content/change_record.tex}{
+	\section*{Document Change Record}
+	\addcontentsline{toc}{section}{Document Change Record}
+	\input{content/change_record}
+}{}
+\clearpage
+
+\input{content/glossary}
+\iftoggle{optionGlossary}{
+	\printglossary[type=\acronymtype,style=long,title={List of Acronyms}]
+	\addcontentsline{toc}{section}{List of Acronyms}
+	\clearpage
+}
+
+\iftoggle{optionListOfFiguresAndTables}{
+\begingroup
+	\let\clearpage\relax
+	\phantomsection
+	\listoffigures
+	\addcontentsline{toc}{section}{List of Figures}
+	
+	\phantomsection
+	\listoftables
+	\addcontentsline{toc}{section}{List of Tables}
+\endgroup
+}
+
+% -----------------------------------------------------------------------------
+% arabic page numbering in the main part
+\clearpage
+\pagenumbering{arabic}
+
+% Own content gets included in the content.tex file
+\input{content/content}
+
+% -----------------------------------------------------------------------------
+% The appendix is included analog to the main part in the file appendix.tex
+\IfFileExists{content/appendix.tex}{
+\begin{appendix}
+	\clearpage
+	\chapter{Appendix}
+	\label{chap:appendix}
+	\input{content/appendix}
+\end{appendix}
+}{}
+
+\end{document}
+
