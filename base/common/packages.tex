@@ -29,6 +29,9 @@
 \usepackage{graphicx}
 \usepackage{floatflt}
 
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,calc,shapes,shapes.geometric,patterns,snakes,matrix,arrows,positioning,automata}
+
 % Change default placement options to [htbp]
 \makeatletter
 \def\fps@figure{htbp}
@@ -87,12 +90,13 @@
     extendedchars=true,
     showspaces=false,
     showstringspaces=false,
-    escapeinside={[[*}{*]])},		% zum Setzten von Referenzen auf einzelne Zeilen, Beispiel: "(*\label{line:irq}*)" und \ref{line:irq}
+	% zum Setzten von Referenzen auf einzelne Zeilen, Beispiel: "[[*\label{line:irq}*]]" und \ref{line:irq}
+    escapeinside={[[*}{*]]},
     firstnumber=auto,
     numbers=left,
     numberstyle=\tiny,
     breaklines=true,
-    backgroundcolor=\color{white},%hellgelb
+    backgroundcolor=\color{white},
     breakautoindent=true
 }
 
@@ -194,9 +198,8 @@
 }
 
 % Use ISO date format for all dates
-\usepackage{datetime}
-%\yyyymmdddate
-\renewcommand{\dateseparator}{-}
+\usepackage[iso,english]{isodate}
+%\renewcommand{\dateseparator}{-}
 
 % for the title page
 \usepackage{wallpaper}

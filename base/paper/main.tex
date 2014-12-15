@@ -23,6 +23,8 @@
 \newtoggle{optionGlossary}
 \newtoggle{optionListOfFiguresAndTables}
 
+\newcommand{\documentPageLogo}{logo}
+
 % Include options set by the user to configure the generation of the
 % document. This includes information like the document name, authors, etc. but
 % also the structure, e.g. whether to include a changelog.
@@ -54,7 +56,11 @@
 
 % -----------------------------------------------------------------------------
 % Titlepage without any page numbering
+\IfFileExists{titlepage.tex}{
 \include{titlepage}
+}{
+\include{base_titlepage}
+}
 
 % Enable header and footer with page numbering
 \include{heading}

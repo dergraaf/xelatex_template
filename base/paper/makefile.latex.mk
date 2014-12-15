@@ -57,7 +57,7 @@ configure:
 md: $(MD_OUT)
 $(BUILDPATH)/md/content/%.tex: content/%.md
 	pandoc --from=markdown --to=rst --output="$@.rst" "$<"
-	$(COMMONPATH)/rst/document_generator "$@.rst" \
+	$(COMMONPATH)/rst/document_generator.py "$@.rst" \
 		--table-style="booktabs" \
 		--tab-width=4 \
 		--template="$(COMMONPATH)/rst/template.tex" \
@@ -65,7 +65,7 @@ $(BUILDPATH)/md/content/%.tex: content/%.md
 
 rst: $(RST_OUT)
 $(BUILDPATH)/rst/content/%.tex: content/%.rst
-	$(COMMONPATH)/rst/document_generator "$<" \
+	$(COMMONPATH)/rst/document_generator.py "$<" \
 		--table-style="booktabs" \
 		--tab-width=4 \
 		--template="$(COMMONPATH)/rst/template.tex" \
